@@ -6,11 +6,11 @@
   ],
   "config_flow": true,
   "documentation": "https://github.com/ricobach/GeoTime",
-  "integration_type": "helper",
+  "integration_type": "service",
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/ricobach/GeoTime/issues",
   "requirements": [
     "timezonefinder==8.2.5"
   ],
-  "version": "1.1.2"
+  "version": "1.1.3"
 }
