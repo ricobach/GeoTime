@@ -1,7 +1,6 @@
 {
   "domain": "geo_time",
   "name": "GeoTime",
-  "version": "1.0.0",
   "codeowners": [
     "@ricobach"
   ],
@@ -13,5 +12,6 @@
   "requirements": [
     "astral==3.2",
     "timezonefinder==8.2.5"
-  ]
+  ],
+  "version": "1.0.0"
 }
