@@ -6,6 +6,7 @@ import asyncio
 from datetime import datetime
 import logging
 from typing import Any
+from urllib.parse import quote
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from astral import LocationInfo
@@ -16,6 +17,7 @@ from homeassistant.components.sensor import SensorEntity, SensorEntityDescriptio
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_LATITUDE, ATTR_LONGITUDE
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity, DataUpdateCoordinator
@@ -169,6 +171,38 @@ class GeoTimeSensor(CoordinatorEntity, SensorEntity):
     def native_value(self) -> str:
         """Return the sensor state."""
         return self.coordinator.data.get(self.entity_description.key, "Unknown")
+
+    @property
+    def entity_picture(self) -> str | None:
+        """Expose the generated GeoTime day/night image on Local Time."""
+        if self.entity_description.key != SENSOR_LOCAL_TIME:
+            return None
+
+        image_entity_id = er.async_get(self.hass).async_get_entity_id(
+            "image",
+            DOMAIN,
+            f"{self._entry.entry_id}_day_night_image",
+        )
+        if image_entity_id is None:
+            return None
+
+        image_state = self.hass.states.get(image_entity_id)
+        if image_state is None:
+            return None
+
+        picture = image_state.attributes.get("entity_picture")
+        if not picture:
+            return None
+
+        # The ImageEntity proxy URL itself can remain unchanged when the image
+        # bytes are rebuilt. Add the image entity state timestamp so dashboard
+        # cards receive a new URL whenever the generated image changes.
+        image_version = image_state.state
+        if image_version and image_version not in ("unknown", "unavailable"):
+            separator = "&" if "?" in picture else "?"
+            return f"{picture}{separator}v={quote(image_version, safe='')}"
+
+        return picture
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
