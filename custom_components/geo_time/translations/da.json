@@ -1,0 +1,28 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Opsæt GeoTime",
+        "description": "Vælg en person eller device tracker. GeoTime bruger koordinaterne til at beregne lokal tid, tidszone og solstatus.",
+        "data": {"target_entity": "Sporingsenhed"}
+      }
+    },
+    "abort": {"already_configured": "Denne enhed er allerede konfigureret."}
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "GeoTime-indstillinger",
+        "description": "Skift den person eller device tracker, som denne GeoTime-post bruger.",
+        "data": {"target_entity": "Sporingsenhed"}
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "local_time": {"name": "Lokal tid"},
+      "sun_status": {"name": "Solstatus"},
+      "timezone": {"name": "Tidszone"}
+    }
+  }
+}

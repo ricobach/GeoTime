@@ -1,0 +1,28 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurar GeoTime",
+        "description": "Selecione uma pessoa ou rastreador de dispositivo. O GeoTime usa as coordenadas para calcular a hora local, o fuso horário e o status do sol.",
+        "data": {"target_entity": "Entidade rastreada"}
+      }
+    },
+    "abort": {"already_configured": "Esta entidade já está configurada."}
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opções do GeoTime",
+        "description": "Altere a pessoa ou o rastreador de dispositivo usado por esta entrada do GeoTime.",
+        "data": {"target_entity": "Entidade rastreada"}
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "local_time": {"name": "Hora local"},
+      "sun_status": {"name": "Status do sol"},
+      "timezone": {"name": "Fuso horário"}
+    }
+  }
+}

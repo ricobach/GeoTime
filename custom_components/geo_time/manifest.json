@@ -1,0 +1,17 @@
+{
+  "domain": "geo_time",
+  "name": "GeoTime",
+  "version": "1.0.0",
+  "codeowners": [
+    "@ricobach"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/ricobach/GeoTime",
+  "integration_type": "helper",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/ricobach/GeoTime/issues",
+  "requirements": [
+    "astral==3.2",
+    "timezonefinder==8.2.5"
+  ]
+}
