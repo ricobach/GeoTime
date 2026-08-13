@@ -3,7 +3,7 @@
 from datetime import timedelta
 
 DOMAIN = "geo_time"
-PLATFORMS = ["sensor"]
+PLATFORMS = ["sensor", "image"]
 
 CONF_TARGET_ENTITY = "target_entity"
 
