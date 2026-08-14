@@ -8,30 +8,25 @@ The integration works from the latitude and longitude already provided by Home A
 
 For each configured `person` or `device_tracker`, GeoTime creates three sensors and one image entity:
 
-- **Local Time** — the local clock time at the tracked entity's current location.
+- **Local Time** — the local clock time at the tracked entity's current location. The sensor exposes the generated GeoTime day/night image through its `entity_picture` for dashboard use.
 - **Sun Status** — `Above` or `Below`, based on whether the sun is above the horizon at that location. Sunrise and sunset are exposed as attributes when available.
 - **Timezone** — the IANA timezone name, for example `Europe/Copenhagen`.
-- **GeoTime Image** — the source entity's picture with a day/night indicator in the upper-right corner.
+- **GeoTime Image** — the source entity's picture with a day/night indicator in the upper-right corner. This image entity provides the generated image used by the Local Time sensor.
 
 ## Day/night image
 
-The GeoTime image entity uses the `entity_picture` from the selected `person` or `device_tracker` as its base image.
+The GeoTime image uses the `entity_picture` from the selected `person` or `device_tracker` as its base image.
 
 A small indicator is added in the **upper-right corner**:
 
 - ☀️ **Sun** when the sun is above the horizon at the tracked location.
 - 🌙 **Moon** when the sun is below the horizon at the tracked location.
 
-GeoTime rebuilds the image when either of these changes:
+GeoTime updates the generated image when the source entity changes and updates the day/night indicator according to the sun status at the tracked location.
 
-- the source entity's `entity_picture` changes;
-- the calculated sun status changes between `Above` and `Below`.
+The generated image is exposed as a real Home Assistant `image` entity and is also exposed through the **Local Time sensor's `entity_picture`**, making the Local Time sensor convenient to use with dashboard cards that support entity pictures.
 
-The integration also checks the sun state periodically so the image can change at sunrise or sunset even when the tracked entity remains stationary.
-
-The image is exposed as a real Home Assistant `image` entity. Home Assistant automatically gives image entities an `entity_picture` URL, so the generated image can be used by dashboard cards that support entity pictures.
-
-A generated entity will typically look similar to:
+A generated image entity will typically look similar to:
 
 ```text
 image.rico_geotime_image
@@ -41,24 +36,25 @@ The exact entity ID depends on the name of the configured entry and can be chang
 
 ### Dashboard example
 
-A standard Picture Entity card can display the generated image directly:
+The generated image can be used as the background of a Picture Elements card while the Local Time sensor provides the displayed time:
 
 ```yaml
-type: picture-entity
-entity: image.rico_geotime_image
-show_name: true
-show_state: false
+type: picture-elements
+image_entity: image.rico_geotime_image
+elements:
+  - type: state-label
+    entity: sensor.rico_local_time
+    style:
+      left: 50%
+      bottom: 5%
+      transform: translate(-50%, 0)
+      color: white
+      font-size: 18px
+      font-weight: 500
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7)
 ```
 
-A Tile card can also use the image entity:
-
-```yaml
-type: tile
-entity: image.rico_geotime_image
-show_entity_picture: true
-```
-
-Because this is an actual Home Assistant image entity, custom dashboard cards can also use its `entity_picture` in the same way as other entities.
+Cards that support `entity_picture` can use the Local Time sensor directly.
 
 ## Requirements
 
@@ -77,7 +73,7 @@ The day/night image additionally requires the source entity to have an `entity_p
 4. Add:
 
    ```text
-   https://github.com/ricobach/GeoTime
+   https://github.com/ricobach/HA-GeoTime
    ```
 
    and select **Integration** as the repository type.
@@ -89,7 +85,7 @@ The day/night image additionally requires the source entity to have an `entity_p
 
 ## Configuration
 
-GeoTime is configured entirely through the Home Assistant UI.
+GeoTime is configured entirely through the Home Assistant UI and appears as a regular Home Assistant integration.
 
 To change the tracked entity later, open **Settings → Devices & services**, select GeoTime, and use the integration options.
 
@@ -111,11 +107,11 @@ Sun Status: Above
 Timezone: Europe/Copenhagen
 ```
 
-and the GeoTime image entity will show Rico's source picture with a sun badge in the upper-right corner. After sunset, the same image automatically changes to a moon badge.
+The generated GeoTime image shows the source picture with a sun badge in the upper-right corner. After sunset, the indicator changes to a moon badge. The same generated picture is available from the Local Time sensor through `entity_picture` for compatible dashboard cards.
 
 ## Notes
 
-GeoTime uses `timezonefinder` for offline coordinate-to-timezone lookup and Astral for sunrise, sunset, and sun-position calculations.
+GeoTime uses `timezonefinder` for offline coordinate-to-timezone lookup and Home Assistant's available Astral library for sunrise, sunset, and sun-position calculations.
 
 For polar regions where sunrise or sunset may not occur on a particular date, GeoTime falls back to solar elevation to determine whether the sun is above or below the horizon.
 
@@ -124,7 +120,7 @@ For polar regions where sunrise or sunset may not occur on a particular date, Ge
 Please report bugs or feature requests through the GitHub issue tracker:
 
 ```text
-https://github.com/ricobach/GeoTime/issues
+https://github.com/ricobach/HA-GeoTime/issues
 ```
 
 ## License
