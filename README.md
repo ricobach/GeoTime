@@ -29,7 +29,7 @@ The generated image is exposed as a real Home Assistant `image` entity and is al
 A generated image entity will typically look similar to:
 
 ```text
-image.rico_geotime_image
+image.person_1_geotime_image
 ```
 
 The exact entity ID depends on the name of the configured entry and can be changed in Home Assistant's entity settings.
@@ -40,10 +40,10 @@ The generated image can be used as the background of a Picture Elements card whi
 
 ```yaml
 type: picture-elements
-image_entity: image.rico_geotime_image
+image_entity: image.person_1_geotime_image
 elements:
   - type: state-label
-    entity: sensor.rico_local_time
+    entity: sensor.person_1_local_time
     style:
       left: 50%
       bottom: 5%
@@ -89,9 +89,36 @@ GeoTime is configured entirely through the Home Assistant UI and appears as a re
 
 To change the tracked entity later, open **Settings → Devices & services**, select GeoTime, and use the integration options.
 
+## Recorder recommendation
+
+The **Local Time** sensor updates frequently and its historical values are usually not useful. To avoid unnecessary growth of the Home Assistant Recorder database, you may want to exclude GeoTime local-time sensors from Recorder.
+
+Add the following to `configuration.yaml`:
+
+```yaml
+recorder:
+  exclude:
+    entity_globs:
+      - sensor.*_local_time
+```
+
+After changing the Recorder configuration, restart Home Assistant.
+
+This does not disable the sensor. The Local Time entity continues to update normally and can still be used in dashboards, automations, and templates; its historical states simply will not be stored in the Recorder database.
+
+If you already use other integrations with entities ending in `_local_time`, exclude individual GeoTime entities instead, for example:
+
+```yaml
+recorder:
+  exclude:
+    entities:
+      - sensor.person_1_local_time
+      - sensor.person_2_local_time
+```
+
 ## Example
 
-If `person.rico` is currently in Copenhagen and has:
+If `person.example` is currently in Copenhagen and has:
 
 ```yaml
 latitude: 55.6761
