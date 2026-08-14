@@ -5,10 +5,10 @@
     "@ricobach"
   ],
   "config_flow": true,
-  "documentation": "https://github.com/ricobach/GeoTime",
+  "documentation": "https://github.com/ricobach/HA-GeoTime",
   "integration_type": "service",
   "iot_class": "calculated",
-  "issue_tracker": "https://github.com/ricobach/GeoTime/issues",
+  "issue_tracker": "https://github.com/ricobach/HA-GeoTime/issues",
   "requirements": [
     "timezonefinder==8.2.5"
   ],
